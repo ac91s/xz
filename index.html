@@ -1,0 +1,94 @@
+                                <!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#1a73e8">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    <title>在线客服系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>在线客服系统</h1>
+    </header>
+
+    <main>
+        <!-- 添加登录界面 -->
+        <div class="login-container" id="loginContainer">
+            <h2>请输入您的昵称</h2>
+            <form id="loginForm">
+                <input type="text" 
+                       id="nickname" 
+                       placeholder="请输入昵称" 
+                       required 
+                       minlength="2" 
+                       maxlength="20"
+                       list="nickname-suggestions"
+                       autocomplete="off">
+                <datalist id="nickname-suggestions"></datalist>
+                <div class="error-message" id="nicknameError"></div>
+                <button type="submit">开始咨询</button>
+            </form>
+        </div>
+
+        <!-- 聊天界面初始隐藏 -->
+        <div class="chat-container" id="chatContainer" style="display: none;">
+            <div class="chat-header">
+                <span id="statusText">正在连接...</span>
+                <span id="typingStatus"></span>
+            </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input">
+                <form id="chatForm">
+                    <button type="button" class="emoji-btn" title="选择表情">😊</button>
+                    <label class="file-upload-btn" title="发送文件（最大5MB）">
+                        <input type="file" id="fileInput" style="display: none" accept="image/*,.pdf,.doc,.docx">
+                        📎
+                    </label>
+                    <input type="text" id="messageInput" placeholder="请输入消息..." required maxlength="1000" autocomplete="off">
+                    <button type="submit">发送</button>
+                </form>
+                <div class="error-message" id="messageError"></div>
+            </div>
+        </div>
+
+        <!-- 图片预览模态框 -->
+        <div id="imageModal" class="modal" style="display: none;">
+            <span class="close-modal">&times;</span>
+            <img id="modalImage" src="" alt="预览图片">
+        </div>
+
+        <!-- 连接错误提示 -->
+        <div id="connectionError" class="error-popup" style="display: none;">
+            <div class="error-content">
+                <h3>连接错误</h3>
+                <p id="errorMessage">连接服务器失败，请检查网络后重试。</p>
+                <button onclick="location.reload()">重新连接</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 添加提示音文件 -->
+    <audio id="notificationSound" preload="auto">
+        <source src="notification.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 添加配置脚本 -->
+    <script>
+        // 根据当前环境确定WebSocket服务器地址
+        window.CONFIG = {
+            // 如果是本地开发环境就用localhost，否则使用部署的服务器地址
+            SOCKET_URL: window.location.hostname === 'localhost' 
+                ? 'http://localhost:3000'
+                : 'https://your-server-url.herokuapp.com' // 需要替换为实际的服务器地址
+        };
+    </script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="chat.js"></script>
+</body>
+</html> 
